@@ -1,2 +1,5 @@
 .idea
+.history
+kaggle/property_data.csv
+kaggle/input
 __pycache__
