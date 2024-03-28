@@ -1,8 +1,4 @@
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import GridSearchCV, KFold, cross_val_score
-import xgboost as xgb
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from category_encoders import TargetEncoder
 
 # Define dtype mapping for reading CSV
@@ -20,7 +16,7 @@ dtype_mapping = {
 }
 
 # Load the data into a pandas DataFrame
-data = pd.read_csv('property_data.csv', dtype=dtype_mapping)
+data = pd.read_csv('kaggle/property_data.csv', dtype=dtype_mapping)
 
 # Convert 'soldDate' to datetime and days since the earliest date
 data['soldDate'] = pd.to_datetime(data['soldDate'])
@@ -54,35 +50,3 @@ data = pd.concat([data, data_encoded], axis=1)
 # Split the data into features (X) and target (y)
 X = data.drop('soldPrice', axis=1)
 y = data['soldPrice']
-
-# Define hyperparameters for tuning
-param_grid = {
-    'learning_rate': [0.1, 0.05, 0.01],
-    'max_depth': [3, 5, 7],
-    'n_estimators': [100, 200, 300]
-}
-
-# Initialize XGBoost regressor
-model = xgb.XGBRegressor()
-
-# Perform grid search with cross-validation
-kf = KFold(n_splits=5, shuffle=True, random_state=42)
-grid_search = GridSearchCV(model, param_grid, cv=kf, scoring='neg_mean_absolute_error', verbose=2, n_jobs=-1)
-grid_search.fit(X, y)
-
-# Print best parameters and best score
-print("Best Parameters:", grid_search.best_params_)
-print("Best Negative MAE:", grid_search.best_score_)
-
-# Use the best model found by grid search
-best_model = grid_search.best_estimator_
-
-# Evaluate the best model using cross-validation
-cv_results = cross_val_score(best_model, X, y, cv=kf, scoring='neg_mean_absolute_error')
-print("Cross-Validation Results (Negative MAE):", cv_results)
-
-# Convert negative MAE scores to positive and calculate mean
-cv_results = -cv_results
-mean_cv_mae = np.mean(cv_results)
-print("Mean Cross-Validation MAE:", mean_cv_mae)
-

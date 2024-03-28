@@ -18,7 +18,7 @@ dtype_mapping = {
     "pType": 'str'
 }
 
-data= pd.read_csv('property_data.csv', dtype=dtype_mapping)
+data= pd.read_csv('/workspaces/incremental-Machine-Learning/kaggle/property_data.csv', dtype=dtype_mapping)
 
 # Convert 'soldDate' to datetime and days since the earliest date
 data['soldDate'] = pd.to_datetime(data['soldDate'])
@@ -34,13 +34,13 @@ data = data.dropna(subset=['soldPrice', 'beds', 'bathrooms', 'carSpaces'])
 
 prices = [sold_price for sold_price in data['soldPrice']]
 
-q1= np.percentile(prices, 25)
-q3= np.percentile(prices, 75)
+q1= np.percentile(prices, 25) #Percentiles - The first quartile (q1) is the value below which 25% of the data falls - The third quartile (q3) is the value below which 75% of the data falls
+q3= np.percentile(prices, 75) #Percentiles
 
-iqr= q3-q1
+iqr= q3-q1 #Interquartile Range (IQR)
 
-upper= q3+1.5*iqr
-lower= q1-1.5*iqr
+upper= q3+1.5*iqr #upper bounds
+lower= q1-1.5*iqr #lower bonds
 data = data[(data['soldPrice'] > lower) & (data['soldPrice'] < upper)]
 
 # Define columns to be target encoded
