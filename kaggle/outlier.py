@@ -25,7 +25,7 @@ dtype_mapping = {
     "pType": 'str'
 }
 
-data= pd.read_csv('/workspaces/incremental-Machine-Learning/kaggle/property_data.csv', dtype=dtype_mapping)
+data= pd.read_csv('property_data.csv', dtype=dtype_mapping)
 
 # Convert 'soldDate' to datetime and days since the earliest date
 data['soldDate'] = pd.to_datetime(data['soldDate'])
@@ -42,7 +42,7 @@ data = data.dropna(subset=['soldPrice', 'beds', 'bathrooms', 'carSpaces'])
 prices = [sold_price for sold_price in data['soldPrice']]
 
 q1= np.percentile(prices, 25) #Percentiles - The first quartile (q1) is the value below which 25% of the data falls of the data falls
-q3= np.percentile(prices, 75) #Percentiles - The third quartile (q3) is the value below which 75% 
+q3= np.percentile(prices, 75) #Percentiles - The third quartile (q3) is the value below which 75%
 
 iqr= q3-q1 #Interquartile Range (IQR)
 
@@ -67,16 +67,16 @@ y = data['soldPrice']
 
 # Define hyperparameters for tuning
 param_grid = {
-    'learning_rate': [0.05, 0.06, 0.001, 0.002],
-    'max_depth': [11, 15, 13, 14],
-    'n_estimators': [120, 130, 140, 110]
+    'learning_rate': [0.04, 0.05, 0.06, 0.07, 0.08],
+    'max_depth': [12, 13, 14, 15, 16],
+    'n_estimators': [130, 140, 150, 160, 170]
 }
 
 # Initialize XGBoost regressor
 model = xgb.XGBRegressor()
 
 # Perform grid search with cross-validation
-kf = KFold(n_splits=5, shuffle=True, random_state=42)
+kf = KFold(n_splits=10, shuffle=True, random_state=42)
 
 # Initialize an empty list to store R-squared scores for each fold
 r2_scores = []
