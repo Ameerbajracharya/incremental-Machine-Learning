@@ -1,5 +1,4 @@
 .idea
 .history
-kaggle/property_data.csv
-kaggle/input
+property_data.csv
 __pycache__

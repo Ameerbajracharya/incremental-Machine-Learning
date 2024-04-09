@@ -16,7 +16,7 @@ dtype_mapping = {
 }
 
 # Load the data into a pandas DataFrame
-data = pd.read_csv('kaggle/property_data.csv', dtype=dtype_mapping)
+data = pd.read_csv('property_data.csv', dtype=dtype_mapping)
 
 # Convert 'soldDate' to datetime and days since the earliest date
 data['soldDate'] = pd.to_datetime(data['soldDate'])
