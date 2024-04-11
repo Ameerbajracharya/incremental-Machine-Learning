@@ -1,5 +1,6 @@
 import pandas as pd
 from category_encoders import TargetEncoder
+import joblib
 
 # Define dtype mapping for reading CSV
 dtype_mapping = {
@@ -20,7 +21,8 @@ data = pd.read_csv('property_data.csv', dtype=dtype_mapping)
 
 # Convert 'soldDate' to datetime and days since the earliest date
 data['soldDate'] = pd.to_datetime(data['soldDate'])
-data['soldDate'] = (data['soldDate'] - data['soldDate'].min()).dt.days
+minDate = data['soldDate'].min()
+data['soldDate'] = (data['soldDate'] - minDate).dt.days
 
 # Remove rows with invalid 'soldPrice'
 data = data[~data['soldPrice'].isin(['Contact Agent', 'Contact agent'])]
@@ -43,6 +45,9 @@ columns_to_encode = ['address', 'state', 'postcode', 'suburb', 'pType']
 target_encoder = TargetEncoder(cols=columns_to_encode)
 data_encoded = target_encoder.fit_transform(data[columns_to_encode], data['soldPrice'])
 
+# Save the target encoder
+# joblib.dump(target_encoder, 'target_encoder.pkl')
+
 # Replace original columns with encoded columns in the DataFrame
 data.drop(columns_to_encode, axis=1, inplace=True)
 data = pd.concat([data, data_encoded], axis=1)
@@ -50,3 +55,4 @@ data = pd.concat([data, data_encoded], axis=1)
 # Split the data into features (X) and target (y)
 X = data.drop('soldPrice', axis=1)
 y = data['soldPrice']
+

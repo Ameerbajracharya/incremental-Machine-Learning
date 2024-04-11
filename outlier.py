@@ -11,6 +11,7 @@ from sklearn.model_selection import GridSearchCV, KFold, cross_val_score
 import xgboost as xgb
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from category_encoders import TargetEncoder
+import joblib
 
 dtype_mapping = {
     "soldDate": 'str',
@@ -127,6 +128,11 @@ print("R-squared scores for each fold:", r2_scores)
 # Calculate and print the mean R-squared score across all folds
 mean_r2 = np.mean(r2_scores)
 print("Mean R-squared score:", mean_r2)
+
+# After training the model and obtaining 'best_model'
+
+# Save the trained model to a file
+joblib.dump(best_model, 'xgboost_model.pkl')
 
 # Record the end time
 end_time = time.time()
