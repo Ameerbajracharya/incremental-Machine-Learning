@@ -31,7 +31,7 @@ def preprocess_inputs(address, state, postcode, suburb, ptype):
         'carSpaces': [0]
     })
 
-      # Concatenate additional_data with data_encoded
+    # Concatenate additional_data with data_encoded
     data_encoded = pd.concat([additional_data, data_encoded], axis=1)
 
     # Define the expected order of columns
@@ -54,7 +54,14 @@ def main():
     address = input("Enter the address: ")
     suburb = input("Enter the suburb: ")
     # state = input("Enter the state: ")
-    postcode = input("Enter the postcode: ")
+
+    while True:
+        postcode = input("Enter the postcode: ")
+        if postcode and 2000 <= int(postcode) < 2999:
+            break
+        else:
+            print("Please enter a postcode between 2000 and 2999")
+
     ptype = input("Enter the property type: ")
 
     # Preprocess user inputs
@@ -67,7 +74,10 @@ def main():
     predicted_price_scalar = predicted_price[0]  # Assuming the predicted price is the first element of the array
 
     # Round up the predicted price
-    rounded_predicted_price = math.ceil(predicted_price_scalar/2)
+    if 2000 <= int(postcode) < 2200:
+        rounded_predicted_price = math.ceil(predicted_price_scalar)
+    else:
+        rounded_predicted_price = math.ceil(predicted_price_scalar/2)
 
     # Format the rounded predicted price as currency
     formatted_currency = locale.currency(rounded_predicted_price, grouping=True)
